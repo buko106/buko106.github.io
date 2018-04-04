@@ -25,19 +25,21 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-center">
-          <h1 class="mt-5 target-item-name"></h1>
+          <h1 class="mt-5">Decryptor : <span class="target-item-name"></span></h1>
         </div>
       </div>
       <div class="row">
         <div class="col-lg-3 text-center">
         </div>
-        <div class="col-lg-6 text-center">
+        <div class="col-lg-6">
           <div class="input-group">
             パスワード
             <input type="password" autofocus class="decryption-password" style="width: 100%; margin: 10px;">
             ハッシュ値(ヒント:2145)
             <input type="text" readonly disabled class="password-md5-hash" style="width: 100%; margin: 10px;">
           </div>
+          出力
+          <pre id="json-renderer" class="json-body" style="width: 100%; margin: 10px;"></pre>
         </div>
         <div class="col-lg-3 text-center">
         </div>
@@ -46,10 +48,13 @@
 
     <!-- Bootstrap core JavaScript -->
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+    <!-- For this page -->
+    <link href="./vendor/css/jquery.json-browse.css" rel="stylesheet">
+    <script src="./vendor/js/jquery.json-browse.js"></script>
     <script src="https://unpkg.com/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/crypto-js@3.1.9-1/crypto-js.js"></script>
-    <!-- For this page -->
-    <script type="text/javascript">
+    <script src="https://unpkg.com/utf8@3.0.0/utf8.js"></script>
+    <script type="text/javascript" charset="UTF-8">
       (function(global) {
         "use strict";
         function getURLParameter(sParam) {
@@ -62,10 +67,17 @@
             }
           }
         }
+        function hex2a(hex) {
+          var str = "";
+          for (var i = 0; i < hex.length; i += 2)
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+          return str;
+        }
         $(function () {
           // init
           var name = decodeURI(getURLParameter("name"));
           $(".target-item-name").text(name);
+          var anchor = global.location.hash.substr(1);
 
           var $password = $(".decryption-password");
           var $hash = $(".password-md5-hash");
@@ -73,6 +85,13 @@
           $password.keyup(function () {
             $hash.val(CryptoJS.MD5(this.value));
           });
+          $password.change(function () {
+            var plaintextArray = CryptoJS.AES.decrypt(anchor, this.value);
+            var decrypted = hex2a(plaintextArray.toString());
+            var asUTF8 = utf8.decode(decrypted);
+            var input = JSON.parse(asUTF8);
+            $("#json-renderer").jsonBrowse(input);
+          })
         });
       })(window);
     </script>

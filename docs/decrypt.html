@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+
+    <title class="target-item-name"></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://unpkg.com/bootstrap@4.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./common.css" rel="stylesheet">
+    <style>
+
+    </style>
+
+  </head>
+
+  <body>
+    <!-- Page Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <h1 class="mt-5 target-item-name"></h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 text-center">
+        </div>
+        <div class="col-lg-6 text-center">
+          <div class="input-group">
+            パスワード
+            <input type="password" autofocus class="decryption-password" style="width: 100%; margin: 10px;">
+            ハッシュ値(ヒント:2145)
+            <input type="text" readonly disabled class="password-md5-hash" style="width: 100%; margin: 10px;">
+          </div>
+        </div>
+        <div class="col-lg-3 text-center">
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap@4.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/crypto-js@3.1.9-1/crypto-js.js"></script>
+    <!-- For this page -->
+    <script type="text/javascript">
+      (function(global) {
+        "use strict";
+        function getURLParameter(sParam) {
+          var sPageURL = global.location.search.substring(1);
+          var sURLVariables = sPageURL.split("&");
+          for (var i = 0; i < sURLVariables.length; i++) {
+            var sParameterName = sURLVariables[i].split("=");
+            if (sParameterName[0] === sParam) {
+              return sParameterName[1];
+            }
+          }
+        }
+        $(function () {
+          // init
+          var name = decodeURI(getURLParameter("name"));
+          $(".target-item-name").text(name);
+
+          var $password = $(".decryption-password");
+          var $hash = $(".password-md5-hash");
+          $hash.val(""); // force refresh
+          $password.keyup(function () {
+            $hash.val(CryptoJS.MD5(this.value));
+          });
+        });
+      })(window);
+    </script>
+    
+  </body>
+
+</html>

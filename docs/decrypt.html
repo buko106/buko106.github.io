@@ -75,9 +75,10 @@
         }
         $(function () {
           // init
-          var name = decodeURI(getURLParameter("name"));
+          var name = decodeURIComponent(getURLParameter("name"));
           $(".target-item-name").text(name);
-          var anchor = global.location.hash.substr(1);
+          var anchor = decodeURIComponent(getURLParameter("data"));
+          console.log(anchor)
 
           var $password = $(".decryption-password");
           var $hash = $(".password-md5-hash");

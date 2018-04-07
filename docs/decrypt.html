@@ -77,8 +77,7 @@
           // init
           var name = decodeURIComponent(getURLParameter("name"));
           $(".target-item-name").text(name);
-          var anchor = decodeURIComponent(getURLParameter("data"));
-          console.log(anchor)
+          var data = decodeURIComponent(getURLParameter("data"));
 
           var $password = $(".decryption-password");
           var $hash = $(".password-md5-hash");
@@ -87,7 +86,7 @@
             $hash.val(CryptoJS.MD5(this.value));
           });
           $password.change(function () {
-            var plaintextArray = CryptoJS.AES.decrypt(anchor, this.value);
+            var plaintextArray = CryptoJS.AES.decrypt(data, this.value);
             var decrypted = hex2a(plaintextArray.toString());
             var asUTF8 = utf8.decode(decrypted);
             var input = JSON.parse(asUTF8);
